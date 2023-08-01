@@ -1,0 +1,75 @@
+random
+
+players = []
+
+option1 = 1
+option2 = 2
+while True:
+    print("----------WELCOME TO ELITE LOTTERY GAME----------")
+    print("Press 1 to show the rule of the lottery game")
+    print("Press 2 to play lottery game")
+    your_choice = int(input("> "))
+    if your_choice == option1:
+        print("you have to stake before you play")
+        print("no of players must be above 1")
+        print("your range of numbers should be between 1 and 10")  # Updated range
+        print("Press 2 to start game")
+    elif your_choice == option2:
+        print("*****WELCOME*****")
+        break
+
+while True:
+    no_of_players = int(input("Enter no of players: "))
+    if no_of_players <= 1:
+        print("Enter numbers above 1")
+    else:
+        break
+
+print(no_of_players)
+
+def lottery_game():
+    for player in range(no_of_players):
+        stake = int(input(f"Player {player + 1}, enter your stake amount: "))
+        numbers = [int(input(f"Player {player + 1}, provide number {count + 1}: ")) for count in range(3)]  # Updated range
+        player_data = {"stake": stake, "numbers": numbers}
+        players.append(player_data)
+
+def generate_random_numbers():
+    return [random.randint(1, 10) for i in range(10)]
+
+def winner():
+    random_numbers = generate_random_numbers()
+    print("The 10 random numbers generated are:")
+    print(random_numbers)
+
+    max_match_count = 0
+    winners = []
+
+    for i in range(no_of_players):
+        player_numbers = players[i]["numbers"]
+        match_count = sum(num in random_numbers for num in player_numbers)
+        print(f"Player {i + 1} matched {match_count} numbers.")
+
+        if match_count > max_match_count:
+            max_match_count = match_count
+            winners = [i + 1]
+        elif match_count == max_match_count:
+            winners.append(i + 1)
+
+    total_stakes = sum(player["stake"] for player in players)
+
+    if max_match_count >= 2:
+        if len(winners) == 1:
+            print(f"Player {winners[0]} is the winner with {max_match_count} matches.")
+            print(f"Player {winners[0]} won {total_stakes:.2f}")
+        else:
+            winners_str = ', '.join(map(str, winners))
+            print(f"Players {winners_str} are the winners with {max_match_count} matches.")
+            prize_per_winner = total_stakes / len(winners)
+            for winner_index in winners:
+                print(f"Player {winner_index} won {prize_per_winner:.2f}")
+    else:
+        print("No winner. No player matched at least 2 numbers.")
+
+lottery_game()
+winner()
